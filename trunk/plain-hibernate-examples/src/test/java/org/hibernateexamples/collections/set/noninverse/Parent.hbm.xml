@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+  <class name="org.hibernateexamples.collections.set.Parent" table="parent">
+    <id name="id"
+        column="id"
+        type="java.lang.String">
+        <generator class="org.hibernate.id.UUIDHexGenerator"/>
+    </id>
+    
+    <set name="children" inverse="false" cascade="all" access="field">
+      <key column="parent_id"/>
+      <one-to-many class="org.hibernateexamples.collections.set.Child"/>
+    </set>
+  </class>
+</hibernate-mapping>
