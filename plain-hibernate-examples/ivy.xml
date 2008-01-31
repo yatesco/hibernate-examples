@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="ISO-8859-1"?>
+<?xml-stylesheet type="text/xsl" href="http://www.jayasoft.fr/org/ivyrep/ivy-doc.xsl"?>
+<ivy-module version="2.0">
+	<info organisation="org" module="hibernate-examples" />
+
+	<dependencies>
+		<dependency org="org.hibernate" name="hibernate" rev="3.2.5.ga"/>
+		<dependency org="hsqldb" name="hsqldb" rev="1.8.0.7"/>
+		<dependency org="junit" name="junit" rev="4.4"/>
+		<dependency org="javax.transaction" name="jta" rev="1.0.1B" />
+		<dependency org="javax.security" name="jacc" rev="1.0" />
+	</dependencies>
+</ivy-module>

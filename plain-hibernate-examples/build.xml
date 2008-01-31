@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="hibernate-examples" default="retrieve" xmlns:ivy="antlib:org.apache.ivy.ant" >
+
+	<!-- define the ivy jars -->
+	<property name="ivy.jar.dir" value="ivy"/>
+	<path id="ivy.lib.path">
+		<fileset dir="${ivy.jar.dir}" includes="*.jar" />
+	</path>
+	<taskdef resource="org/apache/ivy/ant/antlib.xml" uri="antlib:org.apache.ivy.ant" classpathref="ivy.lib.path" />
+
+	<property name="ivy.settings.dir" value="ivy"/>
+	<ivy:settings file="${ivy.settings.dir}/ivysettings.xml" id="ivy.instance"/>
+
+	<!-- Retrieve all the dependencies -->
+    <target name="retrieve">
+		<ivy:retrieve/>
+    </target>
+</project>
+
