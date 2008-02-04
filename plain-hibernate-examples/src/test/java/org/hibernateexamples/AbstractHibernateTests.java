@@ -1,3 +1,18 @@
+/**
+ * Copyright 2008 original authors
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License"); 
+ * you may not use this file except in compliance with the License. 
+ * You may obtain a copy of the License at 
+ * 
+ * http://www.apache.org/licenses/LICENSE-2.0 
+ * 
+ * Unless required by applicable law or agreed to in writing, software 
+ * distributed under the License is distributed on an "AS IS" BASIS, 
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. 
+ * See the License for the specific language governing permissions and 
+ * limitations under the License. 
+ */
 package org.hibernateexamples;
 
 import org.hibernate.SessionFactory;
@@ -7,9 +22,6 @@ import org.junit.Before;
 
 /**
  * Common base class for all Hibernate tests.
- * 
- * <p>This uses Spring's very convenient {@link AbstractTransactionalSpringContextTests}
- * to wrap each method in a transaction. 
  * 
  * @author coliny
  *
@@ -29,7 +41,7 @@ public abstract class AbstractHibernateTests {
         config.addResource(packagePrefix + "Parent.hbm.xml");        
         config.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
         config.setProperty("hibernate.connection.driver_class", "org.hsqldb.jdbcDriver");
-// not working        config.setProperty("hibernate.hbm2ddl.auto", "create–drop");
+// not working        config.setProperty("hibernate.hbm2ddl.auto", "create-drop");
         config.setProperty("hibernate.show_sql", "true");
         config.setProperty("hibernate.connection.url", "jdbc:hsqldb:.");
         config.setProperty("hibernate.connection.username", "sa");
