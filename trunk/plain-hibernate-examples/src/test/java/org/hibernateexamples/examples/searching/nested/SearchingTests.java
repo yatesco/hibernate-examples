@@ -21,85 +21,93 @@ import java.util.List;
 
 import org.hibernate.Criteria;
 import org.hibernate.Session;
+import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Order;
 import org.hibernateexamples.AbstractHibernateTests;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
 /**
- * These tests are very broken, do not use them.  They are temporarily checked in
- * so I can chat through with a (remote) colleague.
- * @author coliny
- *
+ * Order 1..* LineItem.  LineItem 1..* Audits.
+ * 
+ * Audit has an index, so we want to search all Orders ordered by Audit.index.
+ * 
+ * @author Colin Yates
  */
 public class SearchingTests extends AbstractHibernateTests {
 
 	private UserOrder orderA;
 	private UserOrder orderB;
-	private org.hibernate.classic.Session session;
+	private UserOrder orderC;
+	
+	private Session session;
+	private Transaction transaction;
 
 	@Before
 	public void setUp() {
 		// order with two line items, the first lineItem has the higher audit.
-		orderA = new UserOrder();
+		this.orderA = new UserOrder();
 		LineItem lineItemA2 = new LineItem();
 		Audit auditA2 = new Audit(3);
 		lineItemA2.getAudits().add(auditA2);
-		orderA.getLineItems().add(lineItemA2);
+		this.orderA.getLineItems().add(lineItemA2);
 
-		LineItem lineItemA1 = new LineItem();
-		Audit auditA1 = new Audit(1);
-		lineItemA1.getAudits().add(auditA1);
-		orderA.getLineItems().add(lineItemA1);
+		this.orderC = new UserOrder();
+		LineItem lineItemC1 = new LineItem();
+		Audit auditC1 = new Audit(1);
+		lineItemC1.getAudits().add(auditC1);
+		this.orderC.getLineItems().add(lineItemC1);
 		
 		// order with one line item, audit is middle index.
-		orderB = new UserOrder();
+		this.orderB = new UserOrder();
 		LineItem lineItemB1 = new LineItem();
 		Audit auditB1 = new Audit(2);
 		lineItemB1.getAudits().add(auditB1);
-		orderB.getLineItems().add(lineItemB1);
+		this.orderB.getLineItems().add(lineItemB1);
 		
-		session = this.sessionFactory.openSession();
+		this.session = this.sessionFactory.openSession();
+		transaction = this.session.beginTransaction();
 		
 		// save them in the incorrect order
-		session.save(orderB);
-		session.save(orderA);
-		session.flush();
+		this.session.save(orderB);
+		this.session.save(orderC);
+		this.session.save(orderA);
+		this.session.flush();
 	}
 	
-	/**
-	 * Order 1..* LineItem.  LineItem 1..* Audits.
-	 * 
-	 * Audit has an index, so we want to search all Orders ordered by Audit.index.
-	 */
+	@After
+	public void clearUp() {
+		this.transaction.rollback();
+	}
+	
 	@Test
 	public void testWithHql() {		
 		String hql = "from UserOrder o " +
 				"left join o.lineItems as item " +
 				"left join item.audits as audit " +
-				"order by audit.auditIndex asc";
+				"order by audit.auditIndex desc";
 
 		// it is an object[] because we are doing multiple joins
 		List<Object[]> orders = session.createQuery(hql).list();
 		assertEquals("first row should be first order", orderA, orders.get(0)[0]);
 		assertEquals("second row should be second order", orderB, orders.get(1)[0]);
-		assertEquals("second row should be first order again", orderA, orders.get(2)[0]);
+		assertEquals("second row should be third order", orderC, orders.get(2)[0]);
 	}
 	
 	@Test
 	public void testWithCriteria() {
-		Session session = this.sessionFactory.openSession();
-		Criteria criteria = session.createCriteria(UserOrder.class)
+		Criteria criteria = this.session.createCriteria(UserOrder.class)
 			.createAlias("lineItems", "item")
 			.createAlias("item.audits", "audit")
-			.addOrder(Order.asc("audit.auditIndex"));
+			.addOrder(Order.desc("audit.auditIndex"));
 		
 		List<UserOrder> orders = criteria.list();
 		System.out.println(orders);
-//		assertEquals("first row should be first order", orderA, orders.get(0));
-//		assertEquals("second row should be second order", orderB, orders.get(1));
-//		assertEquals("second row should be first order again", orderA, orders.get(2));
+		assertEquals("first row should be first order", orderA, orders.get(0));
+		assertEquals("second row should be second order", orderB, orders.get(1));
+		assertEquals("second row should be third order", orderC, orders.get(2));
 	}
 
 	@Override
