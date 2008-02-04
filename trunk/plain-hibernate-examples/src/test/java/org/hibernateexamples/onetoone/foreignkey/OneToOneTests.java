@@ -15,9 +15,8 @@
  */
 package org.hibernateexamples.onetoone.foreignkey;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertNotSame;
 
-import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.hibernateexamples.collections.set.AbstractCollectionTests;
 import org.hibernateexamples.onetoone.Passport;
@@ -34,8 +33,6 @@ public class OneToOneTests extends AbstractCollectionTests {
 
 	@Test
 	public void testItWorks() {
-		Session session = this.sessionFactory.openSession();
-		
 		Person person = new Person();
 		Passport passport = new Passport();		
 		person.setPassport(passport);
@@ -45,8 +42,8 @@ public class OneToOneTests extends AbstractCollectionTests {
 		 * Because we have no cascade (we could, but haven't) we *must*
 		 * save the end that has the assigned id first.
 		 */
-		session.save(passport);
-		session.save(person);
+		this.session.save(passport);
+		this.session.save(person);
 		session.clear();
 		
 		person = (Person) session.load(Person.class, person.getId());
