@@ -36,9 +36,7 @@ public abstract class AbstractHibernateTests {
 	@Before
 	public void setUpHibernate() {
 		Configuration config = new Configuration();
-		String packagePrefix = determinePackageName();
-        config.addResource(packagePrefix + "Child.hbm.xml");
-        config.addResource(packagePrefix + "Parent.hbm.xml");        
+        addResources(config);        
         config.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
         config.setProperty("hibernate.connection.driver_class", "org.hsqldb.jdbcDriver");
 // not working        config.setProperty("hibernate.hbm2ddl.auto", "create-drop");
@@ -52,6 +50,19 @@ public abstract class AbstractHibernateTests {
 	}
 
 	/**
+	 * Default behaviour is to add a mapping file called <code>Child.hbm.xml</code>
+	 * and <code>Parent.hbm.xml</code>.
+	 * 
+	 * <p>Subclasses may override this.
+	 * @param config
+	 */
+	protected void addResources(Configuration config) {
+		String packagePrefix = determinePackageName();
+		config.addResource(packagePrefix + "Child.hbm.xml");
+        config.addResource(packagePrefix + "Parent.hbm.xml");
+	}
+
+	/**
 	 * Convenience method that will convert the current fully qualified
 	 * class name and package into a form suitable for importing as
 	 * Spring resources.
@@ -61,7 +72,7 @@ public abstract class AbstractHibernateTests {
 	 * @return
 	 */
 	@SuppressWarnings("unused")
-	private String determinePackageName() {
+	protected String determinePackageName() {
 		String className = getClass().getName();
 		// strip out the last class
 		int indexOfClassName = className.lastIndexOf(".");
