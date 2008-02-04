@@ -72,8 +72,10 @@ public abstract class AbstractHibernateTests {
 	
 	@After
 	public void cleanUp() {
-		this.transaction.rollback();
-		this.session.clear();
+		if (this.transaction != null) {
+			this.transaction.rollback();
+			this.session.clear();
+		}
 	}
 	
 	@AfterClass
