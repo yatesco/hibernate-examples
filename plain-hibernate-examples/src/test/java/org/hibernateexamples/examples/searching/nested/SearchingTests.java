@@ -20,12 +20,10 @@ import static org.junit.Assert.assertEquals;
 import java.util.List;
 
 import org.hibernate.Criteria;
-import org.hibernate.Session;
 import org.hibernate.Transaction;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.criterion.Order;
 import org.hibernateexamples.AbstractHibernateTests;
-import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -42,7 +40,6 @@ public class SearchingTests extends AbstractHibernateTests {
 	private UserOrder orderB;
 	private UserOrder orderC;
 	
-	private Session session;
 	private Transaction transaction;
 
 	@Before
@@ -67,19 +64,11 @@ public class SearchingTests extends AbstractHibernateTests {
 		lineItemB1.getAudits().add(auditB1);
 		this.orderB.getLineItems().add(lineItemB1);
 		
-		this.session = this.sessionFactory.openSession();
-		transaction = this.session.beginTransaction();
-		
 		// save them in the incorrect order
 		this.session.save(orderB);
 		this.session.save(orderC);
 		this.session.save(orderA);
 		this.session.flush();
-	}
-	
-	@After
-	public void clearUp() {
-		this.transaction.rollback();
 	}
 	
 	@Test

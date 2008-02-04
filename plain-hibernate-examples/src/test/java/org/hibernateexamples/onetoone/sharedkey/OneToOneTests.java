@@ -15,9 +15,8 @@
  */
 package org.hibernateexamples.onetoone.sharedkey;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
 
-import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 import org.hibernateexamples.collections.set.AbstractCollectionTests;
 import org.hibernateexamples.onetoone.Passport;
@@ -35,17 +34,15 @@ public class OneToOneTests extends AbstractCollectionTests {
 
 	@Test
 	public void testItWorks() {
-		Session session = this.sessionFactory.openSession();
-		
 		Person person = new Person();
 		Passport passport = new Passport();
 		// update both sides....
 		person.setPassport(passport);
 		passport.setPerson(person);
 		
-		session.save(person);
-		session.save(passport);
-		session.clear();
+		this.session.save(person);
+		this.session.save(passport);
+		this.session.clear();
 		
 		person = (Person) session.load(Person.class, person.getId());
 		passport = (Passport) session.load(Passport.class, passport.getId());

@@ -74,6 +74,5 @@ public class AbstractCollectionTests extends AbstractHibernateTests {
 		childA = (Child) session.get(Child.class, childA.getId());
 		childB = (Child) session.get(Child.class, childB.getId());
 	}
-
 	
 }

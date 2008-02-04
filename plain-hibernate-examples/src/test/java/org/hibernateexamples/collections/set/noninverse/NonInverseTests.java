@@ -17,7 +17,6 @@ package org.hibernateexamples.collections.set.noninverse;
 
 import static org.junit.Assert.assertFalse;
 
-import org.hibernate.Session;
 import org.hibernateexamples.collections.set.AbstractCollectionTests;
 import org.hibernateexamples.collections.set.Parent;
 import org.junit.Test;
@@ -42,15 +41,14 @@ public class NonInverseTests extends AbstractCollectionTests {
 	 */
 	@Test
 	public void parentToChild() {
-		Session session = this.sessionFactory.openSession();
 		parent.addChildWithoutSettingParent(childA);
 		parent.addChildWithoutSettingParent(childB);
 		
-		session.save(parent);
-		session.flush();
+		this.session.save(parent);
+		this.session.flush();
 		
 		// clear the flush, and reload the objects
-		reloadParentAndChildren(session);		
+		reloadParentAndChildren(this.session);		
 		
 		verifyKidsAndParentKnowEachOther();
 	}
@@ -61,19 +59,18 @@ public class NonInverseTests extends AbstractCollectionTests {
 	 */
 	@Test
 	public void childToParentIsEnoughEvenThoughItIsInconsistent() {
-		Session session = this.sessionFactory.openSession();
-		session.save(parent);
-		session.flush();
+		this.session.save(parent);
+		this.session.flush();
 		
 		childA.setParent(parent);
 		childB.setParent(parent);
 		
 		// save the children.  No need to save the parent.
-		session.save(childA);
-		session.save(childB);		
-		session.flush();
+		this.session.save(childA);
+		this.session.save(childB);		
+		this.session.flush();
 		
-		reloadParentAndChildren(session);		
+		reloadParentAndChildren(this.session);		
 		
 		/**
 		 * Despite the fact that inverse is not true, and we haven't added 
@@ -89,15 +86,14 @@ public class NonInverseTests extends AbstractCollectionTests {
 	 */
 	@Test
 	public void happyFamily() {
-		Session session = this.sessionFactory.openSession();
 		parent.addChild(childA);
 		parent.addChild(childB);
 		
 		// save the parent, cascade will reach the kids
-		session.save(parent);
-		session.flush();
+		this.session.save(parent);
+		this.session.flush();
 		
-		reloadParentAndChildren(session);		
+		reloadParentAndChildren(this.session);		
 		
 		verifyKidsAndParentKnowEachOther();		
 	}
@@ -110,7 +106,6 @@ public class NonInverseTests extends AbstractCollectionTests {
 	 */
 	@Test
 	public void confusedKids() {
-		Session session = this.sessionFactory.openSession();
 		Parent parentB = new Parent();
 		parent.addChild(childA);
 		parent.addChild(childB);
@@ -119,13 +114,13 @@ public class NonInverseTests extends AbstractCollectionTests {
 		childB.setParent(parentB);
 		
 		// save the parent, cascade will reach the kids
-		session.save(parent);
-		session.save(parentB);		
-		session.flush();
+		this.session.save(parent);
+		this.session.save(parentB);		
+		this.session.flush();
 		
 		// clear the flush, and reload the objects
-		reloadParentAndChildren(session);
-		parentB = (Parent) session.load(Parent.class, parentB.getId());		
+		reloadParentAndChildren(this.session);
+		parentB = (Parent) this.session.load(Parent.class, parentB.getId());		
 		
 		/**
 		 * Because the inverse is false, the fact that childB has parentB
