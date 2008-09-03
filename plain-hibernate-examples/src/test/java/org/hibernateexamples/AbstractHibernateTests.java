@@ -56,10 +56,11 @@ public abstract class AbstractHibernateTests {
 	        addResources(config);        
 	        config.setProperty("hibernate.dialect", "org.hibernate.dialect.HSQLDialect");
 	        config.setProperty("hibernate.connection.driver_class", "org.hsqldb.jdbcDriver");
-	        config.setProperty("hibernate.show_sql", "true");
+	        config.setProperty("hibernate.show_sql", "false");
 	        config.setProperty("hibernate.format_sql", "true");
-	        config.setProperty("hibernate.connection.url", "jdbc:hsqldb:.");
+	        config.setProperty("hibernate.connection.url", "jdbc:hsqldb:file:/c/tmp/hsqldb.db");
 	        config.setProperty("hibernate.connection.username", "sa");
+	        config.setProperty("hibernate.jdbc.batchsize", "50");
 	        AbstractHibernateTests.sessionFactory = config.buildSessionFactory();
 	        
 	        SchemaUpdate schemaUpdate = new SchemaUpdate(config);
