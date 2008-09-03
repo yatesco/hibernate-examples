@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC
+        "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping default-access="field">
+  <class name="org.hibernateexamples.performance.SimpleClass" table="simpleClass">
+    <id name="id"
+        column="id"
+        type="java.lang.String">
+        <generator class="org.hibernate.id.UUIDHexGenerator"/>
+    </id>
+
+	<property name="firstCol"/>
+	<property name="secondCol"/>
+	<property name="thirdCol"/>
+	<property name="fourthCol"/>
+	<property name="fifthCol"/>
+	<property name="sixthCol"/>
+  </class>
+</hibernate-mapping>
